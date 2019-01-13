@@ -23,11 +23,11 @@ func main() {
 	//num := flag.Int("n", 0, "Pass n to use a day different from the current day.")
 	//dir := flag.String("dir", currentDir, "Pass a string to dir to specifiy where to perform the action.")
 	//week := flag.Bool("week", false, "Pass week to show the tasks for the entire week Sunday-Saturday")
+	task := flag.Bool("t", false, "Pass -t at the end to pass in a list of tasks as tailing args.")
 
 	flag.Parse()
 
 	if *create {
-		fmt.Println("Hell yeah, we in there.")
 		createFile(currentDir, *force)
 	}
 
@@ -37,25 +37,21 @@ func main() {
 
 	// if no arguments are provided,
 	if len(os.Args) == 1 {
-		fmt.Println("Showing your tasks for today.")
-		showTasks()
+		showTodaysTasks()
 	}
 
-	//fmt.Printf("dir is %s\n", *dir)
+	if *task {
+		fmt.Println("tail: ", flag.Args())
+		fmt.Println("count: ", len(flag.Args()))
+	}
 }
 
 func getFileNameForToday() string {
 	today := time.Now()
-	fmt.Println(today)
 
 	month := int(today.Month())
-	fmt.Println(month)
-
 	day := today.Day()
-	fmt.Println(day)
-
 	year := today.Year()
-	fmt.Println(year)
 
 	return fmt.Sprintf("%d-%d-%d-tasks.txt", month, day, year)
 }
@@ -72,6 +68,8 @@ func createFile(dir string, force bool) {
 	} else if force {
 		//TODO make sure the user is sure they want to overwrite the file
 		//for now just overwrite it with a slightly different name
+		//message := fmt.Sprintf("Are you sure you want to overwrite %s?", filename)
+
 		filename = "forced-" + filename
 		os.Create(filename)
 	} else {
@@ -84,6 +82,6 @@ func deleteFile(file string) {
 	os.Remove(file)
 }
 
-func showTasks() {
-	fmt.Println("Show tasks has been called.")
+func showTodaysTasks() {
+	fmt.Println("Showing all your tasks for the day.")
 }
