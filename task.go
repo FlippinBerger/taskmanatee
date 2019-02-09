@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"time"
 )
 
 func main() {
@@ -19,13 +18,20 @@ func main() {
 	// Parse the command line flags.
 	create := flag.Bool("create", false, "Pass create to create a new task file.")
 	force := flag.Bool("f", false, "Pass f to overwrite files that already exist.")
+	task := flag.Bool("t", false, "Pass -t at the end to pass in a list of tasks as trailing args.")
+	//week := flag.Bool("w", false, "Pass week to show the tasks for the entire week Sunday-Saturday")
+
 	delete := flag.String("d", "", "Pass d to delete a specified task file.")
+	// TODO this is going to need to be handled differently
 	//num := flag.Int("n", 0, "Pass n to use a day different from the current day.")
 	//dir := flag.String("dir", currentDir, "Pass a string to dir to specifiy where to perform the action.")
-	//week := flag.Bool("week", false, "Pass week to show the tasks for the entire week Sunday-Saturday")
-	task := flag.Bool("t", false, "Pass -t at the end to pass in a list of tasks as tailing args.")
 
 	flag.Parse()
+
+	// if no arguments are provided, show the tasks for today.
+	if len(os.Args) == 1 {
+		showTodaysTasks()
+	}
 
 	if *create {
 		createFile(currentDir, *force)
@@ -35,51 +41,14 @@ func main() {
 		deleteFile(*delete)
 	}
 
-	// if no arguments are provided,
-	if len(os.Args) == 1 {
-		showTodaysTasks()
-	}
-
 	if *task {
 		fmt.Println("tail: ", flag.Args())
 		fmt.Println("count: ", len(flag.Args()))
+		addTasks(flag.Args())
 	}
-}
 
-func getFileNameForToday() string {
-	today := time.Now()
-
-	month := int(today.Month())
-	day := today.Day()
-	year := today.Year()
-
-	return fmt.Sprintf("%d-%d-%d-tasks.txt", month, day, year)
-}
-
-func createFile(dir string, force bool) {
-	filename := getFileNameForToday()
-	fmt.Println(filename)
-
-	// check if the file already exists
-	path := dir + "/" + filename
-
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		os.Create(filename)
-	} else if force {
-		//TODO make sure the user is sure they want to overwrite the file
-		//for now just overwrite it with a slightly different name
-		//message := fmt.Sprintf("Are you sure you want to overwrite %s?", filename)
-
-		filename = "forced-" + filename
-		os.Create(filename)
-	} else {
-		fmt.Println("Unable to create file because it already exists")
-	}
-}
-
-func deleteFile(file string) {
-	//TODO pop the confirmation to make sure they want to delete the file
-	os.Remove(file)
+	a, b := GetDateRangeForWeek()
+	fmt.Printf("a: %v, b: %v\n", a, b)
 }
 
 func showTodaysTasks() {
