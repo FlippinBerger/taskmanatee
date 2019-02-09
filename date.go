@@ -28,17 +28,16 @@ func GetFileNameForToday() string {
 	return fmt.Sprintf("%d-%d-%d-tasks.txt", month, day, year)
 }
 
-// GetDateRangeForWeek will return the time.Time values for Sunday and Saturday
-// of the current week.
-func GetDateRangeForWeek() (start time.Time, end time.Time) {
-	start = time.Now()
+// GetDateRangeForTime will return the time.Time values for Sunday and Saturday
+// of the week containing day
+func GetDateRangeForTime(day time.Time) (start time.Time, end time.Time) {
+	start = day
 
 	// Sunday = 0
 	if start.Day() != 0 {
 		day := time.Duration(start.Weekday())
 
 		start = start.Add(time.Hour * 24 * day * -1)
-		fmt.Println(start)
 	}
 
 	end = start.Add(time.Hour * 24 * 6)

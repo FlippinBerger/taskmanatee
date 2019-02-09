@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 )
 
 func main() {
@@ -47,7 +48,7 @@ func main() {
 		addTasks(flag.Args())
 	}
 
-	a, b := GetDateRangeForWeek()
+	a, b := GetDateRangeForTime(time.Now())
 	fmt.Printf("a: %v, b: %v\n", a, b)
 }
 
