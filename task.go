@@ -18,7 +18,6 @@ func main() {
 
 	// Parse the command line flags.
 	create := flag.Bool("create", false, "Pass create to create a new task file.")
-	force := flag.Bool("f", false, "Pass f to overwrite files that already exist.")
 	task := flag.Bool("t", false, "Pass -t at the end to pass in a list of tasks as trailing args.")
 	//week := flag.Bool("w", false, "Pass week to show the tasks for the entire week Sunday-Saturday")
 
@@ -35,7 +34,8 @@ func main() {
 	}
 
 	if *create {
-		createFile(currentDir, *force)
+		fullPath := currentDir + GetFileNameForToday()
+		createFileAtPath(fullPath)
 	}
 
 	if *delete != "" {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 // File is an object to denote a File of tasks
@@ -13,21 +14,15 @@ type File struct {
 	Tasks []Task
 }
 
-func createFile(dir string, force bool) {
-	filename := GetFileNameForToday()
-	fmt.Println(filename)
+func getFileNameFromPath(path string) string {
+	slice := strings.Split(path, "/")
+	return slice[len(slice)-1]
+}
 
-	// check if the file already exists
-	path := dir + "/" + filename
+func createFileAtPath(path string) {
+	filename := getFileNameFromPath(path)
 
 	if !FileExists(path) {
-		os.Create(filename)
-	} else if force {
-		//TODO make sure the user is sure they want to overwrite the file
-		//for now just overwrite it with a slightly different name
-		//message := fmt.Sprintf("Are you sure you want to overwrite %s?", filename)
-
-		filename = "forced-" + filename
 		os.Create(filename)
 	} else {
 		fmt.Println("Unable to create file because it already exists")
@@ -46,23 +41,13 @@ func deleteFile(file string) {
 	os.Remove(file)
 }
 
-func getFile(fileName string) (*os.File, error) {
-	file, err := os.Open(fileName)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return file, nil
-}
-
 // ReadFile will try to open and parse out the given file
 func ReadFile(fileName string) (*Tasks, error) {
 	dir, _ := os.Getwd()
 	fullPath := dir + "/" + fileName
 
 	if !FileExists(fullPath) {
-		createFile(dir, false)
+		createFileAtPath(fullPath)
 	}
 	file, err := ioutil.ReadFile(fileName)
 
