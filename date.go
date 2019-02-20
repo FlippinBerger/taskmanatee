@@ -25,7 +25,7 @@ func GetFileNameForToday() string {
 	day := today.Day()
 	year := today.Year()
 
-	return fmt.Sprintf("%d-%d-%d-tasks.txt", month, day, year)
+	return fmt.Sprintf("%d-%d-%d-tasks.json", month, day, year)
 }
 
 // GetDateRangeForTime will return the time.Time values for Sunday and Saturday

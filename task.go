@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"time"
 )
 
 func main() {
@@ -45,11 +44,19 @@ func main() {
 	if *task {
 		fmt.Println("tail: ", flag.Args())
 		fmt.Println("count: ", len(flag.Args()))
-		addTasks(flag.Args())
-	}
+		tasks, err := AddTasks(flag.Args())
 
-	a, b := GetDateRangeForTime(time.Now())
-	fmt.Printf("a: %v, b: %v\n", a, b)
+		fmt.Printf("tasks are: %v\n", tasks)
+
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("we definitely hit an error")
+			return
+		}
+
+		// Commit the tasks to the file
+		OverwriteFile(tasks)
+	}
 }
 
 func showTodaysTasks() {

@@ -42,28 +42,52 @@ func deleteFile(file string) {
 }
 
 // ReadFile will try to open and parse out the given file
-func ReadFile(fileName string) (*Tasks, error) {
+func ReadFile(fileName string) (*[]Task, error) {
 	dir, _ := os.Getwd()
 	fullPath := dir + "/" + fileName
 
 	if !FileExists(fullPath) {
 		createFileAtPath(fullPath)
 	}
-	file, err := ioutil.ReadFile(fileName)
+	data, err := ioutil.ReadFile(fileName)
 
 	if err != nil {
 		// handle error here
-		return nil, err
+		tmError := &TMError{fmt.Sprintf("Error reading from %s:, %v", fileName, err)}
+		return nil, tmError
 	}
 
-	tasks := Tasks{}
+	taskSlice := make([]Task, 5, 5)
+	tasks := &taskSlice
 
-	err = json.Unmarshal([]byte(file), &tasks)
+	// if the file is empty, just return empty tasks
+	if len(data) == 0 {
+		return tasks, nil
+	}
+
+	// now we need to parse out the data from the file
+	err = json.Unmarshal([]byte(data), tasks)
 
 	if err != nil {
-		//handle error again
-		return nil, err
+		tmError := &TMError{fmt.Sprintf("Unable to parse file due to error: %v", err)}
+		return nil, tmError
 	}
 
-	return &tasks, nil
+	return tasks, nil
+}
+
+// OverwriteFile will format a Tasks struct to json to be written to the task
+// file
+func OverwriteFile(tasks *[]Task) error {
+	fmt.Println("Overwriting file here.")
+	fileName := GetFileNameForToday()
+
+	data, err := json.Marshal(&tasks)
+
+	if err != nil {
+		return err
+	}
+
+	ioutil.WriteFile(fileName, data, 0666)
+	return nil
 }

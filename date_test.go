@@ -15,7 +15,7 @@ func TestGetFileNameForToday(t *testing.T) {
 
 	fileName := GetFileNameForToday()
 
-	expected := fmt.Sprintf("%d-%d-%d-tasks.txt", month, day, year)
+	expected := fmt.Sprintf("%d-%d-%d-tasks.json", month, day, year)
 
 	if fileName != expected {
 		t.Errorf("Testing get file name for today.\nExpected: %s\nGot: %s", expected, fileName)
