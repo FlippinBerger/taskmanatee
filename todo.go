@@ -40,3 +40,25 @@ func AddTasks(todos []string) (*[]Task, error) {
 
 	return &taskSlice, nil
 }
+
+// Default string to be printed for a task
+func (t Task) String() string {
+	//TODO Add some sort of notion of completion here at the beginning
+	info := "["
+
+	if t.Completed {
+		info += "X] "
+	} else {
+		info += " ] "
+	}
+
+	info += t.Task + "\n"
+
+	if len(t.Notes) > 0 {
+		for i, note := range t.Notes {
+			info += fmt.Sprintf("\t%d. %s\n", i+1, note)
+		}
+	}
+
+	return info
+}
