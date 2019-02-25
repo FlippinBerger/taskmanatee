@@ -15,11 +15,6 @@ type Task struct {
 	CompletedTime *time.Time `json:"completedTime"`
 }
 
-// Tasks houses the entire Task list for a date
-type Tasks struct {
-	Tasks []Task `json:"tasks"`
-}
-
 func newTask(todo string) *Task {
 	task := Task{todo, nil, time.Now(), false, nil}
 	return &task
@@ -29,9 +24,6 @@ func newTask(todo string) *Task {
 // to it
 func AddTasks(todos []string) (*[]Task, error) {
 	fileName := GetFileNameForToday()
-
-	fmt.Printf("file name is %s\n", fileName)
-	fmt.Printf("todos are %v\n", todos)
 
 	tasks, err := ReadFile(fileName)
 
@@ -47,8 +39,6 @@ func AddTasks(todos []string) (*[]Task, error) {
 		task := newTask(todo)
 		taskSlice = append(taskSlice, *task)
 	}
-
-	fmt.Printf("task Slice holds: %v", taskSlice)
 
 	return &taskSlice, nil
 }

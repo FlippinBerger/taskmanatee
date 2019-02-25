@@ -79,7 +79,6 @@ func ReadFile(fileName string) (*[]Task, error) {
 // OverwriteFile will format a Tasks struct to json to be written to the task
 // file
 func OverwriteFile(tasks *[]Task) error {
-	fmt.Println("Overwriting file here.")
 	fileName := GetFileNameForToday()
 
 	data, err := json.Marshal(&tasks)
