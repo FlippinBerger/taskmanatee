@@ -57,7 +57,7 @@ func ReadFile(fileName string) (*[]Task, error) {
 		return nil, tmError
 	}
 
-	taskSlice := make([]Task, 5, 5)
+	var taskSlice []Task
 	tasks := &taskSlice
 
 	// if the file is empty, just return empty tasks
