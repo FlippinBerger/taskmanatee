@@ -70,15 +70,3 @@ func TestDeleteFile(t *testing.T) {
 		t.Errorf("Testing DeleteFile, and it didn't delete the file.")
 	}
 }
-
-func TestGetFileNameFromPath(t *testing.T) {
-	path := "home/dir/file.txt"
-
-	fileName := getFileNameFromPath(path)
-
-	expected := "file.txt"
-
-	if fileName != expected {
-		t.Errorf("Testing getFileNameFromPath for path %s.\nExpected %s\nGot %s\n", path, expected, fileName)
-	}
-}

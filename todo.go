@@ -23,9 +23,7 @@ func newTask(todo string) *Task {
 // AddTasks will collect the tasks for the current day, and add the new tasks
 // to it
 func AddTasks(todos []string) (*[]Task, error) {
-	fileName := GetFileNameForToday()
-
-	tasks, err := ReadFile(fileName)
+	tasks, err := ReadFile()
 
 	if err != nil {
 		taskErr := &TMError{fmt.Sprintf("There was an error reading the file: %v", err)}

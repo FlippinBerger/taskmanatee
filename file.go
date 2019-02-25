@@ -5,55 +5,57 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"strings"
+	"os/user"
 )
 
-// File is an object to denote a File of tasks
-type File struct {
-	Name  string
-	Tasks []Task
+var path = ""
+
+func getFilePath() string {
+	if path != "" {
+		return path
+	}
+
+	user, _ := user.Current()
+	dir := user.HomeDir
+
+	path = dir + "/.taskManTasks.json"
+
+	return path
 }
 
-func getFileNameFromPath(path string) string {
-	slice := strings.Split(path, "/")
-	return slice[len(slice)-1]
-}
-
-func createFileAtPath(path string) {
-	filename := getFileNameFromPath(path)
-
-	if !FileExists(path) {
-		os.Create(filename)
+func createFile() {
+	if !FileExists() {
+		fmt.Println("definitely printing that shit")
+		os.Create(getFilePath())
 	} else {
 		fmt.Println("Unable to create file because it already exists")
 	}
 }
 
 // FileExists returns true if the file at path exists
-func FileExists(path string) bool {
-	_, err := os.Stat(path)
+func FileExists() bool {
+	_, err := os.Stat(getFilePath())
 
 	return !os.IsNotExist(err)
 }
 
-func deleteFile(file string) {
+func deleteFile() {
 	//TODO pop the confirmation to make sure they want to delete the file
-	os.Remove(file)
+	os.Remove(getFilePath())
 }
 
 // ReadFile will try to open and parse out the given file
-func ReadFile(fileName string) (*[]Task, error) {
-	dir, _ := os.Getwd()
-	fullPath := dir + "/" + fileName
-
-	if !FileExists(fullPath) {
-		createFileAtPath(fullPath)
+func ReadFile() (*[]Task, error) {
+	if !FileExists() {
+		fmt.Println("creating the file")
+		createFile()
 	}
-	data, err := ioutil.ReadFile(fileName)
+	filePath := getFilePath()
+	data, err := ioutil.ReadFile(filePath)
 
 	if err != nil {
 		// handle error here
-		tmError := &TMError{fmt.Sprintf("Error reading from %s:, %v", fileName, err)}
+		tmError := &TMError{fmt.Sprintf("Error reading from %s:, %v", filePath, err)}
 		return nil, tmError
 	}
 
@@ -79,14 +81,12 @@ func ReadFile(fileName string) (*[]Task, error) {
 // OverwriteFile will format a Tasks struct to json to be written to the task
 // file
 func OverwriteFile(tasks *[]Task) error {
-	fileName := GetFileNameForToday()
-
 	data, err := json.Marshal(&tasks)
 
 	if err != nil {
 		return err
 	}
 
-	ioutil.WriteFile(fileName, data, 0666)
+	ioutil.WriteFile(getFilePath(), data, 0666)
 	return nil
 }

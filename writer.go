@@ -4,8 +4,8 @@ import (
 	"fmt"
 )
 
-// OutputTasks will output a CLI friendly UI for the given list of tasks
-func OutputTasks(tasks *[]Task) {
+// FormatTasks will output a CLI friendly UI for the given list of tasks
+func FormatTasks(tasks *[]Task) {
 	fmt.Println("Task List:")
 
 	for i, task := range *tasks {
@@ -13,13 +13,15 @@ func OutputTasks(tasks *[]Task) {
 	}
 }
 
-// OutputTasksForToday gets the tasks for today, and uses OutputTasks to show them
-func OutputTasksForToday() {
-	tasks, err := ReadFile(GetFileNameForToday())
+// OutputTasks gets the tasks for today, and uses OutputTasks to show them
+func OutputTasks() {
+	// TODO ReadFile will create a new file if it doesn't exist, this is
+	// undesirable
+	tasks, err := ReadFile()
 
 	if err != nil || len(*tasks) == 0 {
 		fmt.Println("You have no tasks recorded for today.")
 	} else {
-		OutputTasks(tasks)
+		FormatTasks(tasks)
 	}
 }
