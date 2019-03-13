@@ -2,69 +2,66 @@ package main
 
 import (
 	"os"
+	"os/user"
 	"testing"
 )
 
-func TestCreateFile(t *testing.T) {
-	// get the pwd
-	dir, _ := os.Getwd()
-
-	// get the file name for today
-	fileName := "test-" + GetFileNameForToday()
-
-	// check if the file already exists
-	path := dir + "/" + fileName
-
-	if FileExists(path) {
-		t.Errorf("Testing createFile, and the file for today already exists")
+func getPath() string {
+	if path != "" {
+		return path
 	}
 
-	createFileAtPath(path)
+	user, _ := user.Current()
+	dir := user.HomeDir
 
-	if !FileExists(path) {
+	path = dir + "/.taskManTasks.json"
+
+	return path
+}
+
+func TestCreateFile(t *testing.T) {
+	if FileExists() {
+		t.Errorf("Testing createFile, and the file doesn't exist")
+	}
+
+	createFile()
+
+	if !FileExists() {
 		t.Errorf("Testing createFile, and the file wasn't created")
 	} else {
 		// clean up after ourselves, this test was successful
-		os.Remove(fileName)
+		os.Remove(getPath())
 	}
 }
 
 func TestFileExists(t *testing.T) {
-	dir, _ := os.Getwd()
+	path := getPath()
 
-	fileName := "fileExistsTest.txt"
-
-	path := dir + "/" + fileName
-
-	exists := FileExists(path)
+	exists := FileExists()
 
 	if exists {
 		t.Errorf("Testing FileExists, and if returned true for a file not yet created.")
 	}
 
-	os.Create(fileName)
+	os.Create(path)
 
-	exists = FileExists(path)
+	exists = FileExists()
 
 	if !exists {
 		t.Errorf("Testing FileExists, and if returned false for a file just created.")
 	} else {
 		//clean up
-		os.Remove(fileName)
+		os.Remove(path)
 	}
 }
 
 func TestDeleteFile(t *testing.T) {
-	dir, _ := os.Getwd()
-	fileName := "deleteFileTest.txt"
+	path := getPath()
+	os.Create(path)
 
-	path := dir + "/" + fileName
+	deleteFile()
 
-	os.Create(fileName)
-
-	deleteFile(fileName)
-
-	exists := FileExists(path)
+	exists := FileExists()
 
 	if exists {
 		t.Errorf("Testing DeleteFile, and it didn't delete the file.")
