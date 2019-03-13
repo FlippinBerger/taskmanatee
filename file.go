@@ -25,7 +25,6 @@ func getFilePath() string {
 
 func createFile() {
 	if !FileExists() {
-		fmt.Println("definitely printing that shit")
 		os.Create(getFilePath())
 	} else {
 		fmt.Println("Unable to create file because it already exists")

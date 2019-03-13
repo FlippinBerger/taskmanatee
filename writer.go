@@ -9,7 +9,7 @@ func FormatTasks(tasks *[]Task) {
 	fmt.Println("Task List:")
 
 	for i, task := range *tasks {
-		fmt.Printf("%d. %v", i+1, task)
+		fmt.Printf("%d. %v", i+1, &task)
 	}
 }
 
