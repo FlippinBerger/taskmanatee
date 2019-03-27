@@ -38,11 +38,6 @@ func FileExists() bool {
 	return !os.IsNotExist(err)
 }
 
-func deleteFile() {
-	//TODO pop the confirmation to make sure they want to delete the file
-	os.Remove(getFilePath())
-}
-
 // ReadFile will try to open and parse out the given file
 func ReadFile() (*[]Task, error) {
 	if !FileExists() {

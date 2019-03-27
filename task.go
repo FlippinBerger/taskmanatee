@@ -20,31 +20,16 @@ func newTask(todo string) *Task {
 	return &task
 }
 
-// AddTasks will collect the tasks for the current day, and add the new tasks
-// to it
-func AddTasks(todos []string) (*[]Task, error) {
-	tasks, err := ReadFile()
-
-	if err != nil {
-		taskErr := &TMError{fmt.Sprintf("There was an error reading the file: %v", err)}
-		return nil, taskErr
-	}
-
-	// create a new task struct for each todo and add it to the slice of tasks
-	taskSlice := *tasks
-
-	for _, todo := range todos {
-		task := newTask(todo)
-		taskSlice = append(taskSlice, *task)
-	}
-
-	return &taskSlice, nil
-}
-
 // AppendTasks will append 2 slices of tasks togeter
 func AppendTasks(tasks *[]Task, newTasks *[]Task) *[]Task {
 	newSlice := append(*tasks, *newTasks...)
 	return &newSlice
+}
+
+// CreateTask will take do all the work of adding a string to a list of tasks
+func CreateTask(tasks *[]Task, todo string) *[]Task {
+	task := newTask(todo)
+	return AppendTasks(tasks, &[]Task{*task})
 }
 
 // DeleteTask will remove the task at index
@@ -86,7 +71,6 @@ func (t *Task) DeleteNote(index int) {
 
 // Default string to be printed for a task
 func (t *Task) String() string {
-	//TODO Add some sort of notion of completion here at the beginning
 	info := "["
 
 	if t.Completed {
