@@ -14,12 +14,8 @@ func FormatTasks(tasks *[]Task) {
 }
 
 // OutputTasks gets the tasks for today, and uses OutputTasks to show them
-func OutputTasks() {
-	// TODO ReadFile will create a new file if it doesn't exist, this is
-	// undesirable
-	tasks, err := ReadFile()
-
-	if err != nil || len(*tasks) == 0 {
+func OutputTasks(tasks *[]Task) {
+	if len(*tasks) == 0 {
 		fmt.Println("You have no tasks recorded for today.")
 	} else {
 		FormatTasks(tasks)
